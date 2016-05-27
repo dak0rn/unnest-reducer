@@ -5,7 +5,8 @@
   "main": "build.js",
   "scripts": {
     "test": "tape test.js",
-    "build": "babel -o build.js index.js"
+    "build": "babel -o build.js index.js",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
