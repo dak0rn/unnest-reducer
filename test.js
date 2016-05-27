@@ -68,6 +68,27 @@ test('Correctly flattens a nested reducer', t => {
     t.end();
 });
 
+test('The glue', t => {
+    const unnestReducer = obtain();
+    const glues = ['_', '', '$$', '42'];
+
+    t.plan( glues.length );
+
+    glues.forEach( glue => {
+        t.comment(glue);
+        const reducers = {
+            level: {
+                two() { t.pass(); }
+            }
+        };
+
+        const name = `level${glue}two`;
+        unnestReducer(reducers, null, glue)(null, createAction(name));
+    });
+
+    t.end();
+});
+
 test('Uses the initial state', t => {
     const unnestReducer = obtain();
     const initialState = 42;
@@ -89,6 +110,32 @@ test('Uses the initial state', t => {
 
     reducer(void 0, createAction('def'));
     reducer(void 0, createAction('so_nested'));
+
+    t.end();
+});
+
+test('Forwards given state', t => {
+    const unnestReducer = obtain();
+    const givenState = 3.1415926;
+
+    const reducers = {
+        first(state) {
+            t.equal(state, givenState);
+        },
+
+        second: {
+            reducer(state) {
+                t.equal(state, givenState);
+            }
+        }
+    };
+
+    t.plan(2);
+
+    const reducer = unnestReducer(reducers);
+
+    reducer(givenState, createAction('first'));
+    reducer(givenState, createAction('second_reducer'));
 
     t.end();
 });
