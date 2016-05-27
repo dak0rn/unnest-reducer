@@ -1,0 +1,30 @@
+{
+  "name": "unnest-reducer",
+  "version": "1.0.0",
+  "description": "Utility to create a reducer from a nested object",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dak0rn/unnest-reducer.git"
+  },
+  "keywords": [
+    "reducer",
+    "redux",
+    "unnest",
+    "flatten",
+    "react"
+  ],
+  "author": "Daniel Koch <daniel@suitsoft.eu>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/dak0rn/unnest-reducer/issues"
+  },
+  "homepage": "https://github.com/dak0rn/unnest-reducer#readme",
+  "devDependencies": {
+    "babel-cli": "^6.9.0",
+    "tape": "^4.5.1"
+  }
+}
