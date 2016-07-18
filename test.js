@@ -22,6 +22,13 @@ test('Exported function takes three arguments', t => {
     t.end();
 });
 
+test('Exports the flatten function', t => {
+    t.plan(1);
+    const unnestReducer = obtain();
+    t.equal(typeof unnestReducer, 'function');
+    t.end();
+});
+
 test('Keeps the structure of a simple reducer definition', t => {
 
     const unnestReducer = obtain();

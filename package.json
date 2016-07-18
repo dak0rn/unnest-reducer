@@ -1,6 +1,6 @@
 {
   "name": "unnest-reducer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Utility to create a reducer from a nested object",
   "main": "build.js",
   "scripts": {

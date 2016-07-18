@@ -84,3 +84,6 @@ module.exports = (reducers, initial, glue) => {
         return state;
     };
 };
+
+// Export the flattening function
+module.exports.flatten = flatten;
