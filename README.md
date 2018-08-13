@@ -68,10 +68,12 @@ const nextState = reducer( currentState, action );
 The package exports one function:
 
 ```javascript
-unnestReducer(reducers, initialState = void 0, glue = '_')
+unnestReducer(reducers, initialState = void 0, glue = '_', pre = identity)
 ```
 
 - `reducers` - Object of reducer functions, will be flattened up to the first level
                using the `glue` parameter
 - `initialState` - Initial state to use, default is `undefined`
 - `glue` - String used to join nested names, default is `'_'`
+- `pre` - Pre-processing function `(reducer function, key string) => function` that is passed the function and the (possibly nested)
+          key of the reducer function. Must return a new function.
