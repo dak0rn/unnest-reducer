@@ -14,11 +14,11 @@ test('Exports a function', t => {
     t.end();
 });
 
-test('Exported function takes three arguments', t => {
+test('Exported function takes four arguments', t => {
     const unnestReducer = obtain();
 
     t.plan(1);
-    t.equal(unnestReducer.length, 3);
+    t.equal(unnestReducer.length, 4);
     t.end();
 });
 
@@ -30,47 +30,57 @@ test('Exports the flatten function', t => {
 });
 
 test('Keeps the structure of a simple reducer definition', t => {
-
     const unnestReducer = obtain();
 
     // Reducer structure
     const reducers = {
-        reducerA() { t.pass('reducerA'); },
-        reducerB() { t.pass('reducerB'); },
-        reducerC() { t.pass('reducerC'); }
+        reducerA() {
+            t.pass('reducerA');
+        },
+        reducerB() {
+            t.pass('reducerB');
+        },
+        reducerC() {
+            t.pass('reducerC');
+        }
     };
 
     const reducer = unnestReducer(reducers);
 
     t.plan(3);
 
-    reducer( null, createAction('reducerA') );
-    reducer( null, createAction('reducerB') );
-    reducer( null, createAction('reducerC') );
+    reducer(null, createAction('reducerA'));
+    reducer(null, createAction('reducerB'));
+    reducer(null, createAction('reducerC'));
 
     t.end();
 });
 
 test('Correctly flattens a nested reducer', t => {
-
     const unnestReducer = obtain();
 
     // The reducers
     const reducers = {
         reducer: {
-            A() { t.pass('reducer_A'); }
+            A() {
+                t.pass('reducer_A');
+            }
         },
-        reducerB() { t.pass('reducerB'); },
-        reducerC() { t.pass('reducerC'); }
+        reducerB() {
+            t.pass('reducerB');
+        },
+        reducerC() {
+            t.pass('reducerC');
+        }
     };
 
     const reducer = unnestReducer(reducers);
 
     t.plan(3);
 
-    reducer( null, createAction('reducer_A') );
-    reducer( null, createAction('reducerB') );
-    reducer( null, createAction('reducerC') );
+    reducer(null, createAction('reducer_A'));
+    reducer(null, createAction('reducerB'));
+    reducer(null, createAction('reducerC'));
 
     t.end();
 });
@@ -79,13 +89,15 @@ test('The glue', t => {
     const unnestReducer = obtain();
     const glues = ['_', '', '$$', '42'];
 
-    t.plan( glues.length );
+    t.plan(glues.length);
 
-    glues.forEach( glue => {
+    glues.forEach(glue => {
         t.comment(glue);
         const reducers = {
             level: {
-                two() { t.pass(); }
+                two() {
+                    t.pass();
+                }
             }
         };
 
@@ -144,5 +156,29 @@ test('Forwards given state', t => {
     reducer(givenState, createAction('first'));
     reducer(givenState, createAction('second_reducer'));
 
+    t.end();
+});
+
+test('Uses the pre-process function', t => {
+    const unnestReducer = obtain();
+    const top = function() {};
+    const nested = function() {};
+
+    const reducers = {
+        top,
+        level: {
+            nested
+        }
+    };
+
+    const pre = function(fn, key) {
+        if ('top' === key) t.equals(fn, top);
+        else if ('level_nested' === key) t.equals(fn, nested);
+        else t.fail(`Unknown key: ${key}`);
+    };
+
+    t.plan(2);
+
+    unnestReducer(reducers, null, '_', pre);
     t.end();
 });

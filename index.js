@@ -35,8 +35,9 @@ const isObject = what => null !== what && !Array.isArray(what) && 'object' === t
  * @param  {string=}  glue  Combining string, default '_'
  * @return  {object}  Flattened object
  */
-const flatten = (target, glue) => {
+const flatten = (target, glue, pre) => {
     'undefined' !== typeof glue || (glue = '_');
+    'function' === typeof pre || (pre = a => a);
     const output = {};
     const keys = Object.keys(target);
 
@@ -45,14 +46,14 @@ const flatten = (target, glue) => {
 
         // If it is not an object, copy as is
         if (!isObject(sub)) {
-            output[key] = sub;
+            output[key] = pre(sub, key);
             return;
         }
 
         // We expect this to be a child element
         Object.keys(sub).forEach(subkey => {
             const name = [key, glue, subkey].join('');
-            output[name] = sub[subkey];
+            output[name] = pre(sub[subkey], name);
         });
     });
 
@@ -66,10 +67,11 @@ const flatten = (target, glue) => {
  * @param  {object}  reducer  Reducer definitions
  * @param  {any=}  initial  Initial state
  * @param  {string=}  glue  Join text, default '_'
+ * @param  {function=} pre  Preprocessing function for reducer functions
  * @return  {function}  Reducer function
  */
-module.exports = (reducers, initial, glue) => {
-    const actual = flatten(reducers, glue);
+module.exports = (reducers, initial, glue, pre) => {
+    const actual = flatten(reducers, glue, pre);
 
     // The reducer
     return (state, action) => {
